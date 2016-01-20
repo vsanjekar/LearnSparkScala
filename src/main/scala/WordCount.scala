@@ -1,3 +1,5 @@
+import java.security.Timestamp
+
 import org.apache.spark.{
   SparkContext,
   SparkConf
@@ -19,7 +21,9 @@ object WordCount {
     val words = input.flatMap(line => line.split(" "))
     val counts = words.map(word => (word, 1))
     val wordCounts = counts.reduceByKey((x, y) => x+y) // PairRDD function
-    wordCounts.saveAsTextFile("target/outputFile")
+    wordCounts.saveAsTextFile("target/output"+(System.currentTimeMillis/1000).toString)
+
+    wordCounts.collect().foreach(println)
     sparkContext.stop()
   }
 }
